@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strconv"
 	"os/exec"
+	"log"
 )
 
 var (
@@ -95,12 +96,15 @@ func lampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	aLamp,_ := db.GetLamp(lamp)
 	switch action {
 	case "on":
+		log.Println("Hej")
 		//~/dev/lamp/
 		exec.Command("/bin/sh", "-c", "~/dev/lamp/./send "+strconv.Itoa(aLamp.Id) +" 1").Output()
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode("Turned on")
 	case "off":
-		exec.Command("/bin/sh", "-c", "~/dev/lamp/./send "+strconv.Itoa(aLamp.Id)+" 0").Output()
+		log.Println("hej då")
+		out,_ := exec.Command("/bin/sh", "-c", "~/dev/lamp/./send "+strconv.Itoa(aLamp.Id)+" 0").Output()
+		log.Println(string(out))
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode("Turned off")
 	default:
