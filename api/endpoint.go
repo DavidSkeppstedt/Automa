@@ -103,6 +103,7 @@ func lampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 		json.NewEncoder(w).Encode("Turned on")
 	case "off":
 		log.Println("hej då")
+		log.Println("~/dev/lamp/./send "+strconv.Itoa(aLamp.Id)+" 0")
 		out,_ := exec.Command("/bin/sh", "-c", "~/dev/lamp/./send "+strconv.Itoa(aLamp.Id)+" 0").Output()
 		log.Println("Lamp said:",string(out))
 		w.WriteHeader(http.StatusOK)
