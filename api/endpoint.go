@@ -96,23 +96,23 @@ func lampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	aLamp,_ := db.GetLamp(lamp)
 	switch action {
 	case "on":
-		log.Println("Hej")
-		//~/dev/lamp/
-		exec.Command("/bin/sh", "-c", "~/dev/lamp/./send "+strconv.Itoa(aLamp.Lamp) +" 1").Output()
+		out,err := exec.Command("/bin/sh", "-c", "/home/david/dev/lamp/./send "+strconv.Itoa(aLamp.Lamp)+" 1").CombinedOutput()
+		if err != nil {
+			log.Println(err)
+			log.Println(string(out))
+			w.WriteHeader(500)
+			return
+		}
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode("Turned on")
 	case "off":
-		log.Println("hej då")
-		log.Println("~/dev/lamp/./send "+strconv.Itoa(aLamp.Lamp)+" 0")
 		out,err := exec.Command("/bin/sh", "-c", "/home/david/dev/lamp/./send "+strconv.Itoa(aLamp.Lamp)+" 0").CombinedOutput()
 		if err != nil {
 			log.Println(err)
 			log.Println(string(out))
 			w.WriteHeader(500)
 			return
-		}	
-	
-		log.Println("Lamp said:",string(out))
+		}
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode("Turned off")
 	default:
