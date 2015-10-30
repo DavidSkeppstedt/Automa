@@ -98,13 +98,13 @@ func lampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	case "on":
 		log.Println("Hej")
 		//~/dev/lamp/
-		exec.Command("/bin/sh", "-c", "~/dev/lamp/./send "+strconv.Itoa(aLamp.Id) +" 1").Output()
+		exec.Command("/bin/sh", "-c", "~/dev/lamp/./send "+strconv.Itoa(aLamp.Lamp) +" 1").Output()
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode("Turned on")
 	case "off":
 		log.Println("hej då")
 		log.Println("~/dev/lamp/./send "+strconv.Itoa(aLamp.Id)+" 0")
-		out,_ := exec.Command("/bin/sh", "-c", "~/dev/lamp/./send "+strconv.Itoa(aLamp.Id)+" 0").Output()
+		out,_ := exec.Command("/bin/sh", "-c", "~/dev/lamp/./send "+strconv.Itoa(aLamp.Lamp)+" 0").Output()
 		log.Println("Lamp said:",string(out))
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode("Turned off")
