@@ -78,7 +78,7 @@ func allLampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.
 		return
 	}
 
-	if lamps,err := db.FetchLamps(); err != nil {
+	if lamps,err := db.FetchLamps(); err == nil {
 		for _, aLamp := range lamps {
 			doAction(action,aLamp,w)
 		}

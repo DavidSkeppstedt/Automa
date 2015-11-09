@@ -41,7 +41,7 @@ var routes = Routes{
 	Route{
 		"Global lamp action",
 		"GET",
-		"/api/lamp/all/:action",
+		"/api/lamps/:action",
 		allLampActionHandler,
 	},
 	Route{
