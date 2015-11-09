@@ -65,6 +65,51 @@ func createLampHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 
 }
 
+func allLampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+
+	//decide on the action..
+	//check if action is okay.
+	action := ps.ByName("action")
+	_, ok := actions[action]
+	if !ok {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode("Action not accepted. Use on or off.")
+		return
+	}
+
+	if lamps,err := db.FetchLamps(); err != nil {
+		for _, aLamp := range lamps {
+			doAction(action,aLamp,w)
+		}
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("All lamps is now " + action)
+}
+
+func doAction(action string,aLamp model.Lamp,w http.ResponseWriter)  {
+	switch action {
+	case "on":
+		out,err := exec.Command("/bin/sh", "-c", "/home/david/dev/lamp/./send "+strconv.Itoa(aLamp.Lamp)+" 1").CombinedOutput()
+		if err != nil {
+			log.Println(err)
+			log.Println(string(out))
+			w.WriteHeader(500)
+			return
+		}
+	case "off":
+		out,err := exec.Command("/bin/sh", "-c", "/home/david/dev/lamp/./send "+strconv.Itoa(aLamp.Lamp)+" 0").CombinedOutput()
+		if err != nil {
+			log.Println(err)
+			log.Println(string(out))
+			w.WriteHeader(500)
+			return
+		}
+	default:
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
 func lampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
