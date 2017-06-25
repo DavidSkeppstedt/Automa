@@ -6,6 +6,7 @@ import (
 
 func FetchLamps() (result []model.Lamp, err error) {
 	rows, err := Db.Query("SELECT * FROM lamps")
+	defer rows.Close()
 	for rows.Next() {
 		var tmp model.Lamp
 		rows.Scan(&tmp.Id, &tmp.Name, &tmp.Zone, &tmp.Lamp)
@@ -17,6 +18,7 @@ func FetchLamps() (result []model.Lamp, err error) {
 
 func LampExists(lamp int) (bool, error) {
 	rows, err := Db.Query("SELECT EXISTS (SELECT lamp FROM lamps WHERE lamp = $1 LIMIT 1)", lamp)
+	defer rows.Close()
 	rows.Next()
 	var exist bool
 	rows.Scan(&exist)
@@ -25,6 +27,7 @@ func LampExists(lamp int) (bool, error) {
 
 func GetLamp(lamp int) (result model.Lamp, err error) {
 	rows, err := Db.Query("SELECT * FROM lamps WHERE lamp = $1", lamp)
+	defer rows.Close()
 	rows.Next()
 	var tmp model.Lamp
 	rows.Scan(&tmp.Id, &tmp.Name, &tmp.Zone, &tmp.Lamp)

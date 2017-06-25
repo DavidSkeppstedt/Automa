@@ -67,7 +67,7 @@ func createLampHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 
 func allLampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	//decide on the action..
 	//check if action is okay.
 	action := ps.ByName("action")
@@ -112,6 +112,7 @@ func doAction(action string,aLamp model.Lamp,w http.ResponseWriter)  {
 
 func lampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	//check if the lamp exist
 	lamp, _ := strconv.Atoi(ps.ByName("lamp"))
@@ -166,6 +167,7 @@ func lampActionHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 }
 
 func lampsHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
 	//fetch array of lamps from db.
